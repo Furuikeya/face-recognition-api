@@ -1,0 +1,74 @@
+import express, { response } from "express";
+import bcrypt from "bcrypt-nodejs";
+import cors from "cors";
+import knex from "knex";
+import handleRegister from "./controllers/register.js";
+import handleSignin from "./controllers/signin.js";
+import handleProfileGet from "./controllers/profile.js";
+import { handleImage, handleApiCall } from "./controllers/image.js";
+
+// const profile = require("./controllers/profile.js");
+
+const db = knex({
+  client: "pg",
+  connection: {
+    host: "127.0.0.1",
+    user: "postgres",
+    password: "test",
+    database: "frdb",
+  },
+});
+
+const app = express();
+
+app.use(express.json());
+app.use(cors());
+
+//ASYNC BCRYPT NODEJS
+//   bcrypt.compare(
+//     "apples",
+//     "$2a$10$qr7.oj.kEAwEbpMxTjS96u8sdnTkm5hTBDsP3TC9tmp24jUx/vEzy",
+//     function (err, res) {
+//       console.log("first guess", res);
+//     }
+//   );
+//   bcrypt.compare(
+//     "veggies",
+//     "$2a$10$qr7.oj.kEAwEbpMxTjS96u8sdnTkm5hTBDsP3TC9tmp24jUx/vEzy",
+//     function (err, res) {
+//       console.log("first guess", res);
+//     }
+//   );
+
+app.post("/signin", handleSignin(db, bcrypt));
+
+app.post("/register", (req, res) => {
+  handleRegister(req, res, db, bcrypt);
+});
+
+app.get("/profile/:id", (req, res) => {
+  handleProfileGet(req, res, db);
+});
+
+app.put("/image", (req, res) => {
+  handleImage(req, res, db);
+});
+app.post("/imageurl", (req, res) => {
+  handleApiCall(req, res);
+});
+
+// // Load hash from your password DB.
+
+app.listen(3000, () => {
+  console.log("app is running on port 3000");
+});
+
+/*
+/--> res = this is working
+/signin --> POST = success/fail
+/register --> POST = user
+/profile/:userId --> GET = user
+/image --> PUT --> user
+
+
+*/
