@@ -62,7 +62,7 @@ app.post("/imageurl", (req, res) => {
 // // Load hash from your password DB.
 
 app.listen(process.env.PORT || 3000, () => {
-  console.log(`mastr, the app is running on ${process.env.PORT}`);
+  console.log(`master, the app is running on ${process.env.PORT}`);
 });
 
 /*
