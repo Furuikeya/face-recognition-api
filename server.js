@@ -39,7 +39,9 @@ app.use(cors());
 //       console.log("first guess", res);
 //     }
 //   );
-
+app.get("/", (req, res) => {
+  res.send(database.users);
+});
 app.post("/signin", handleSignin(db, bcrypt));
 
 app.post("/register", (req, res) => {
